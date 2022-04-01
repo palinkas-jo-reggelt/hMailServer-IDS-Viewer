@@ -32,6 +32,7 @@
 	if (isset($_GET['sort1'])) {
 		$sort1_val = $_GET['sort1'];
 		$sort1_page = "&sort1=".$sort1_val;
+		$sort1_hidden = "<input type='hidden' name='sort1' value='".$sort1_val."'>";
 		if ($_GET['sort1'] == "hitsasc") {$sort1_sql = "sumhits ASC"; $sort1_ph = "&#8593; Hits";}
 		else if ($_GET['sort1'] == "hitsdesc") {$sort1_sql = "sumhits DESC"; $sort1_ph = "&#8595; Hits";}
 		else if ($_GET['sort1'] == "newest") {$sort1_sql = "maxts ASC"; $sort1_ph = "&#8593; Date";}
@@ -44,6 +45,7 @@
 		$sort1_sql = "";
 		$sort1_ph = "Sort";
 		$sort1_page = "";
+		$sort1_hidden = "";
 	}
 	if ((isset($_GET['sort1'])) || (isset($_GET['sort2']))) {
 		$orderby = "ORDER BY ";
@@ -70,9 +72,10 @@
 	
 	echo "
 			<form autocomplete='off' action='viewcountry.php' method='GET'><br>
-				<input type='text' size='20' id='country' name='search' placeholder='Search Country...' value='".$search_ph."'>
+				<input type='text' size='20' id='autocomplete' name='search' placeholder='Search Country...' value='".$search_ph."'>
 				<input type='submit' value='Search'>
 				<button class='button' type='submit' name='clear'>Reset</button>
+				".$sort1_hidden."
 			</form>
 		</div>
 	</div>
@@ -92,7 +95,10 @@
 	$total_pages = ceil($total_rows / $no_of_records_per_page);
 
 	$sql = $pdo->prepare("
-		SELECT TRIM(BOTH '\"' FROM country) AS trimcountry, SUM(hits) AS sumhits, MAX(timestamp) AS maxts 
+		SELECT 
+			TRIM(BOTH '\"' FROM country) AS trimcountry, 
+			SUM(hits) AS sumhits, 
+			MAX(timestamp) AS maxts 
 		FROM ".$Database['tablename']." 
 		".$search_SQL."
 		GROUP BY trimcountry
@@ -133,7 +139,7 @@
 		while($row = $sql->fetch(PDO::FETCH_ASSOC)){
 			echo "
 			<div class='div-table-row'>
-				<div class='div-table-col' data-column='Country'>".$row['trimcountry']."</div>
+				<div class='div-table-col mobile-bold' data-column='Country'>".$row['trimcountry']."</div>
 				<div class='div-table-col center' data-column='Hits'>".$row['sumhits']."</div>
 				<div class='div-table-col center' data-column='Last'>".date("y/m/d H:i:s", strtotime($row['maxts']))."</div>
 			</div>";
@@ -158,15 +164,15 @@
 		}
 	}
 
-	// JS autocomplete country
+	// JS autocomplete
 	echo "
 	<script>
 	$(function() {
-		$('#country').autocomplete({
-			source: 'autocomplete-country.php',
+		$('#autocomplete').autocomplete({
+			source: 'autocomplete.php',
 			select: function( event, ui ) {
 				event.preventDefault();
-				$('#country').val(ui.item.value);
+				$('#autocomplete').val(ui.item.value);
 			}
 		});
 	});

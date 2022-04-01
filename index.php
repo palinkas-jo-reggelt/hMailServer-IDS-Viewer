@@ -1,4 +1,4 @@
-<?php include("head.php") ?>
+<?php include("head-ind.php") ?>
 
 	<!-- START DIALS -->
 	<div class="section">
@@ -72,7 +72,7 @@
 			echo "
 			<div class='div-table'>
 				<div class='div-table-row-header'>
-					<div class='div-table-col'>IP</div>
+					<div class='div-table-col'>IP Address</div>
 					<div class='div-table-col'>Country</div>
 					<div class='div-table-col'>Hits</div>
 					<div class='div-table-col'>Percent</div>
@@ -80,7 +80,7 @@
 			while($row = $sql->fetch(PDO::FETCH_ASSOC)){
 				echo "
 				<div class='div-table-row'>
-					<div class='div-table-col ip' data-column='IP'>".$row['ipaddress']."</div>
+					<div class='div-table-col mobile-bold' data-column='IP'><a href='viewall.php?search=".urlencode($row['ipaddress'])."'>".$row['ipaddress']."</a></div>
 					<div class='div-table-col' data-column='Country'>".$row['trimcountry']."</div>
 					<div class='div-table-col center' data-column='Hits'>".number_format($row['hits'])."</div>
 					<div class='div-table-col center' data-column='Percent'>".round(($row['hits'] / $all_rows * 100),2)."%</div>
@@ -125,7 +125,7 @@
 			while($row = $sql->fetch(PDO::FETCH_ASSOC)){
 				echo "
 				<div class='div-table-row'>
-					<div class='div-table-col' data-column='Country'>".$row['trimcountry']."</div>
+					<div class='div-table-col mobile-bold' data-column='Country'><a href='viewall.php?search=".urlencode($row['trimcountry'])."'>".$row['trimcountry']."</a></div>
 					<div class='div-table-col center' data-column='Hits'>".number_format($row['countries'])."</div>
 					<div class='div-table-col center' data-column='Percent'>".round(($row['countries'] / $all_rows * 100),2)."%</div>
 				</div>";

@@ -14,7 +14,7 @@
 	}
 	if (isset($_GET['search'])) {
 		$search = $_GET['search'];
-		$search_SQL = "WHERE country='".$search."'";
+		$search_SQL = "WHERE country LIKE '%".$search."%' OR ipaddress LIKE '%".$search."%'";
 		$search_ph = $search;
 		$search_hidden = "<input type='hidden' name='search' value='".$search."'>";
 		$search_page = "&search=".$search;
@@ -26,12 +26,13 @@
 		$search_page = "";
 	}
 	if (isset($_GET['clear'])) {
-		header("Location: viewall.php");
+		redirect("viewall.php");
 	}
 	
 	if (isset($_GET['sort1'])) {
 		$sort1_val = $_GET['sort1'];
 		$sort1_page = "&sort1=".$sort1_val;
+		$sort1_hidden = "<input type='hidden' name='sort1' value='".$sort1_val."'>";
 		if ($_GET['sort1'] == "hitsasc") {$sort1_sql = "hits ASC"; $sort1_ph = "&#8593; Hits";}
 		else if ($_GET['sort1'] == "hitsdesc") {$sort1_sql = "hits DESC"; $sort1_ph = "&#8595; Hits";}
 		else if ($_GET['sort1'] == "newest") {$sort1_sql = "DATE(timestamp) ASC"; $sort1_ph = "&#8593; Date";}
@@ -46,10 +47,12 @@
 		$sort1_sql = "";
 		$sort1_ph = "Sort";
 		$sort1_page = "";
+		$sort1_hidden = "";
 	}
 	if (isset($_GET['sort2'])) {
 		$sort2_val = $_GET['sort2'];
 		$sort2_page = "&sort2=".$sort2_val;
+		$sort2_hidden = "<input type='hidden' name='sort1' value='".$sort2_val."'>";
 		if ($_GET['sort2'] == "hitsasc") {$sort2_sql = ", hits ASC"; $sort2_ph = "&#8593; Hits";}
 		else if ($_GET['sort2'] == "hitsdesc") {$sort2_sql = ", hits DESC"; $sort2_ph = "&#8595; Hits";}
 		else if ($_GET['sort2'] == "newest") {$sort2_sql = ", timestamp ASC"; $sort2_ph = "&#8593; Date";}
@@ -64,13 +67,13 @@
 		$sort2_sql = "";
 		$sort2_ph = "Sort";
 		$sort2_page = "";
+		$sort2_hidden = "";
 	}
 	if ((isset($_GET['sort1'])) || (isset($_GET['sort2']))) {
 		$orderby = "ORDER BY ";
 	} else {
 		$orderby = "ORDER BY timestamp DESC";
 	}
-
 
 	echo "
 	<div class='section'>
@@ -104,15 +107,15 @@
 					<option value='ipasc'>&#8593; IP</option>
 					<option value='ipdesc'>&#8595; IP</option>
 				</select>
-				".$search_hidden."
-				<input type='hidden' name='sort1' value='".$sort1_val."'>
+				".$search_hidden.$sort1_hidden."
 			</form>";
 	}
 	echo "
 			<form autocomplete='off' action='viewall.php' method='GET'><br>
-				<input type='text' size='20' id='country' name='search' placeholder='Search Country...' value='".$search_ph."'>
+				<input type='text' size='20' id='autocomplete' name='search' placeholder='Search Country or IP...' value='".$search_ph."'>
 				<input type='submit' value='Search'>
 				<button class='button' type='submit' name='clear'>Reset</button>
+				".$sort1_hidden.$sort2_hidden."
 			</form>
 		</div>
 	</div>
@@ -132,7 +135,12 @@
 	$total_pages = ceil($total_rows / $no_of_records_per_page);
 
 	$sql = $pdo->prepare("
-		SELECT *, TRIM(BOTH '\"' FROM country) AS trimcountry
+		SELECT 
+			TRIM(BOTH '\"' FROM country) AS trimcountry,
+			country,
+			ipaddress,
+			timestamp,
+			hits
 		FROM ".$Database['tablename']." 
 		".$search_SQL."
 		".$orderby.$sort1_sql.$sort2_sql."
@@ -173,7 +181,7 @@
 		while($row = $sql->fetch(PDO::FETCH_ASSOC)){
 			echo "
 			<div class='div-table-row'>
-				<div class='div-table-col ip' data-column='IP'>".$row['ipaddress']."</div>
+				<div class='div-table-col mobile-bold' data-column='IP'>".$row['ipaddress']."</div>
 				<div class='div-table-col center' data-column='Hits'>".number_format($row['hits'])."</div>
 				<div class='div-table-col center' data-column='Last'>".date("y/m/d H:i:s", strtotime($row['timestamp']))."</div>
 				<div class='div-table-col' data-column='Country'>".$row['trimcountry']."</div>
@@ -199,15 +207,15 @@
 		}
 	}
 
-	// JS autocomplete country
+	// JS autocomplete
 	echo "
 	<script>
 	$(function() {
-		$('#country').autocomplete({
-			source: 'autocomplete-country.php',
+		$('#autocomplete').autocomplete({
+			source: 'autocomplete.php',
 			select: function( event, ui ) {
 				event.preventDefault();
-				$('#country').val(ui.item.value);
+				$('#autocomplete').val(ui.item.value);
 			}
 		});
 	});
