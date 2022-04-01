@@ -44,4 +44,14 @@ $Database = array (
 $no_of_records_per_page = 20;
 
 
+/*  GeoIP Allowed Countries 
+
+	If you use GeoIP, list countries allowed to connect. 
+	If not, then list only the country you're in.
+	The purpose is for the "Allowed Countries" dial on the status page.
+	Check Alpha-2 Code here -> https://en.wikipedia.org/wiki/ISO_3166-1
+*/
+
+$allowedCountries = array('US','CA','AT','BE','CH','CZ','DE','DK','ES','FI','FR','GB','GL','GR','HR','HU','IE','IS','IT','LI','MC','NL','NO','PL','PT','RO','RS','SE','SI','SK','SM','AU','NZ','KR');
+
 ?>

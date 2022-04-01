@@ -22,4 +22,26 @@
 		}
 	}
 
+	function allowedCountries() {
+		global $allowedCountries,$countriesArray;
+		include_once("countryarray.php");
+
+		$countryNameList[] = "^(";
+		foreach ($allowedCountries as $countryCode) {
+			$countryNameList[] = $countriesArray[$countryCode]."|";
+		}
+		return preg_replace("/\|$/",")$",implode($countryNameList)); 
+	}
+
+	function bannedCountries() {
+		global $allowedCountries, $countriesArray;
+		include_once("countryarray.php");
+		
+		$countryNameList[] = "^(?!";
+		foreach ($allowedCountries as $countryCode) {
+			$countryNameList[] = $countriesArray[$countryCode]."|";
+		}
+		return preg_replace("/\|$/",").*$",implode($countryNameList));
+	}
+	
 ?>

@@ -3,13 +3,24 @@
 	<!-- START DIALS -->
 	<div class="section">
 		<h2>Today's Activity:</h2>
-		<div style="float:left;width:50%;">
-			<center>
-				<div id="todays_hits_dial"></div>
-				IPs Added
-			</center>
+		<div style="float:left;width:66%;">
+			<div style="float:left;width:50%;">
+				<center>
+					<div id="todays_banned_hits_dial"></div>
+					IPs Added:<br>
+					Banned Countries
+				</center>
+			</div>
+			<div style="float:right;width:50%;">
+				<center>
+					<div id="todays_allowed_hits_dial"></div>
+					IPs Added:<br>
+					Allowed Countries
+				</center>
+			</div>
+			<div class="clear"></div>
 		</div>
-		<div style="float:right;width:50%;">
+		<div style="float:right;width:34%;">
 			<center>
 				<div id="todays_countries_dial"></div>
 				Countries Added

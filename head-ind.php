@@ -29,14 +29,14 @@
 <!-- Goolag charts -->
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<?php include("dialtodayhits.php") ?>
+<!--?php include("dialtodayhits.php") ?-->
+<?php include("dialtodaybannedhits.php") ?>
+<?php include("dialtodayallowedhits.php") ?>
 <?php include("dialtodaycountryhits.php") ?>
 <?php include("charthitsperday.php") ?>
 <?php include("chartcountriesperday.php") ?>
 <?php include("charthitsperhour.php") ?>
 <?php include("chartcountriesperhour.php") ?>
-
-
 
 </head>
 <body>
