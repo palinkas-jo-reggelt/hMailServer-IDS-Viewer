@@ -28,6 +28,7 @@
 			</div>
 			<div class='clear'></div>
 		</div>
+		
 		<div style='float:right;width:34%;'>
 			<center>
 				<div id='todays_countries_dial'></div>
@@ -160,7 +161,7 @@
 	echo "
 			</div> <!--End table-->
 			<br>
-		</div> 
+		</div> <!--End secleft -->
 		<!-- END OF TOP TEN IP ADDRESSES -->";
 
 	if ($useGeoIP) {
@@ -201,7 +202,7 @@
 		echo "
 			</div> <!--End table-->
 		<br>
-		</div> <!-- End Section -->
+		</div> <!-- End secleft -->
 		<!-- END OF TOP TEN COUNTRIES -->";
 	} else {
 		echo "
@@ -238,7 +239,7 @@
 		echo "
 			</div> <!--End table-->
 		<br>
-		</div> <!-- End Section -->
+		</div> <!-- End secright -->
 		<!-- END OF LAST TEN IP ADDRESSES -->";
 	}
 
@@ -247,4 +248,5 @@
 	</div> <!-- END OF SECTION -->";
 
 ?>
+
 <?php include("foot.php") ?>
