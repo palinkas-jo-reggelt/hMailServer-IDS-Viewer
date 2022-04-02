@@ -44,14 +44,24 @@ $Database = array (
 $no_of_records_per_page = 20;
 
 
-/*  GeoIP Allowed Countries 
+/*  GeoIP 
 
-	If you use GeoIP, list countries allowed to connect. 
-	If not, then list only the country you're in.
-	The purpose is for the "Allowed Countries" dial on the status page.
+	*** $useGeoIP ***
+	Bool switch to enable more dials, charts and stats if your IDS table also collects country 
+	name information.
+
+	*** $countryColumnName ***
+	The name of the db column containing geoip country name
+
+	*** $allowedCountries ***
+	List of countries allowed to connect to your hMailServer. If you do not block by geoip, then
+	use your home country. This feature separates two dials for allowed and banned countries. At 
+	least one country is required!!! 
 	Check Alpha-2 Code here -> https://en.wikipedia.org/wiki/ISO_3166-1
 */
 
+$useGeoIP = true;
+$countryColumnName = "country";
 $allowedCountries = array('US','CA','AT','BE','CH','CZ','DE','DK','ES','FI','FR','GB','GL','GR','HR','HU','IE','IS','IT','LI','MC','NL','NO','PL','PT','RO','RS','SE','SI','SK','SM','AU','NZ','KR');
 
 ?>
