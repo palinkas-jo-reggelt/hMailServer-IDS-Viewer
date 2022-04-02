@@ -16,7 +16,7 @@
 			ROUND(((COUNT(ipaddress)) * 1.2), -2) AS dailymax,
 			DATE(timestamp) AS daily
 		FROM ".$Database['tablename']." 
-		WHERE country REGEXP '".allowedCountries()."'
+		WHERE ".$countryColumnName." REGEXP '".allowedCountries()."'
 		GROUP BY daily
 		ORDER BY dailymax DESC
 		LIMIT 1
@@ -37,7 +37,7 @@
 		FROM (
 			SELECT * 
 			FROM ".$Database['tablename']." 
-			WHERE '".date('Y-m-d')." 00:00:00' <= timestamp AND country REGEXP '".allowedCountries()."'
+			WHERE '".date('Y-m-d')." 00:00:00' <= timestamp AND ".$countryColumnName." REGEXP '".allowedCountries()."'
 		) AS A 
 		WHERE timestamp <= '".date('Y-m-d')." 23:59:59'
 	");

@@ -15,7 +15,7 @@ function drawChart() {
 			DATE_FORMAT(timestamp, '%Y') AS year,
 			(DATE_FORMAT(timestamp, '%c') - 1) AS month,
 			DATE_FORMAT(timestamp, '%e') AS day,
-			COUNT(DISTINCT(country)) AS countryperday 
+			COUNT(DISTINCT(".$countryColumnName.")) AS countryperday 
 		FROM ".$Database['tablename']." 
 		WHERE DATE(timestamp) < DATE(NOW()) 
 		GROUP BY daily ASC

@@ -14,7 +14,7 @@
 	}
 	if (isset($_GET['search'])) {
 		$search = $_GET['search'];
-		$search_SQL = "WHERE country LIKE '%".$search."%' OR ipaddress LIKE '%".$search."%'";
+		$search_SQL = "WHERE ".$countryColumnName." LIKE '%".$search."%' OR ipaddress LIKE '%".$search."%'";
 		$search_ph = $search;
 		$search_hidden = "<input type='hidden' name='search' value='".$search."'>";
 		$search_page = "&search=".$search;
@@ -84,9 +84,13 @@
 					<option value='hitsasc'>&#8593; Hits</option>
 					<option value='hitsdesc'>&#8595; Hits</option>
 					<option value='newest'>&#8593; Date</option>
-					<option value='oldest'>&#8595; Date</option>
+					<option value='oldest'>&#8595; Date</option>";
+	if ($useGeoIP) {
+		echo"
 					<option value='countryasc'>&#8593; Country</option>
-					<option value='countrydesc'>&#8595; Country</option>
+					<option value='countrydesc'>&#8595; Country</option>";
+	}
+	echo "
 					<option value='ipasc'>&#8593; IP</option>
 					<option value='ipdesc'>&#8595; IP</option>
 				</select>
@@ -101,18 +105,23 @@
 					<option value='hitsasc'>&#8593; Hits</option>
 					<option value='hitsdesc'>&#8595; Hits</option>
 					<option value='newest'>&#8593; Date</option>
-					<option value='oldest'>&#8595; Date</option>
+					<option value='oldest'>&#8595; Date</option>";
+	if ($useGeoIP) {
+		echo"
 					<option value='countryasc'>&#8593; Country</option>
-					<option value='countrydesc'>&#8595; Country</option>
+					<option value='countrydesc'>&#8595; Country</option>";
+	}
+	echo "
 					<option value='ipasc'>&#8593; IP</option>
 					<option value='ipdesc'>&#8595; IP</option>
 				</select>
 				".$search_hidden.$sort1_hidden."
 			</form>";
 	}
+	if ($useGeoIP) {$placeholder = "Search Country or IP...";} else {$placeholder = "Search IP...";}
 	echo "
 			<form autocomplete='off' action='viewall.php' method='GET'><br>
-				<input type='text' size='20' id='autocomplete' name='search' placeholder='Search Country or IP...' value='".$search_ph."'>
+				<input type='text' size='20' id='autocomplete' name='search' placeholder='".$placeholder."' value='".$search_ph."'>
 				<input type='submit' value='Search'>
 				<button class='button' type='submit' name='clear'>Reset</button>
 				".$sort1_hidden.$sort2_hidden."
@@ -134,18 +143,27 @@
 	$total_rows = $total_pages_sql->fetchColumn();
 	$total_pages = ceil($total_rows / $no_of_records_per_page);
 
-	$sql = $pdo->prepare("
-		SELECT 
-			TRIM(BOTH '\"' FROM country) AS trimcountry,
-			country,
-			ipaddress,
-			timestamp,
-			hits
-		FROM ".$Database['tablename']." 
-		".$search_SQL."
-		".$orderby.$sort1_sql.$sort2_sql."
-		LIMIT ".$offset.", ".$no_of_records_per_page
-	);
+	if ($useGeoIP) {
+		$sql_query = "
+			SELECT 
+				TRIM(BOTH '\"' FROM ".$countryColumnName.") AS trimcountry,
+				".$countryColumnName.",
+				ipaddress,
+				timestamp,
+				hits
+			FROM ".$Database['tablename']." 
+			".$search_SQL."
+			".$orderby.$sort1_sql.$sort2_sql."
+			LIMIT ".$offset.", ".$no_of_records_per_page;
+	} else {
+		$sql_query = "
+			SELECT *
+			FROM ".$Database['tablename']." 
+			".$search_SQL."
+			".$orderby.$sort1_sql.$sort2_sql."
+			LIMIT ".$offset.", ".$no_of_records_per_page;
+	}
+	$sql = $pdo->prepare($sql_query);
 	$sql->execute();
 
 	if ($search==""){
@@ -172,19 +190,27 @@
 		<span style='font-size:0.8em;'>Results ".$search_res.": ".number_format($total_rows)." Record".$singular." ".$pagination."<br></span>
 		<div class='div-table'>
 			<div class='div-table-row-header'>
-				<div class='div-table-col'>IP</div>
+				<div class='div-table-col'>IP Address</div>
 				<div class='div-table-col'>Hits</div>
-				<div class='div-table-col'>Last</div>
-				<div class='div-table-col'>Country</div>
+				<div class='div-table-col'>Last</div>";
+		if ($useGeoIP) {
+			echo "
+				<div class='div-table-col'>Country</div>";
+		}
+		echo "
 			</div>";
 		
 		while($row = $sql->fetch(PDO::FETCH_ASSOC)){
 			echo "
 			<div class='div-table-row'>
-				<div class='div-table-col mobile-bold' data-column='IP'>".$row['ipaddress']."</div>
+				<div class='div-table-col mobile-bold' data-column='IP Address'>".$row['ipaddress']."</div>
 				<div class='div-table-col center' data-column='Hits'>".number_format($row['hits'])."</div>
-				<div class='div-table-col center' data-column='Last'>".date("y/m/d H:i:s", strtotime($row['timestamp']))."</div>
-				<div class='div-table-col' data-column='Country'>".$row['trimcountry']."</div>
+				<div class='div-table-col center' data-column='Last'>".date("y/m/d H:i:s", strtotime($row['timestamp']))."</div>";
+			if ($useGeoIP) {
+				echo "
+				<div class='div-table-col' data-column='Country'>".$row['trimcountry']."</div>";
+			}
+			echo "
 			</div>";
 		}
 		echo "

@@ -18,7 +18,7 @@ function drawChart() {
 			SELECT 
 				DATE(timestamp) AS day, 
 				HOUR(timestamp) AS hour, 
-				COUNT(DISTINCT(country)) as numhits 
+				COUNT(DISTINCT(".$countryColumnName.")) as numhits 
 			FROM ".$Database['tablename']." 
 			GROUP BY DATE(timestamp), HOUR(timestamp)
 		) d 

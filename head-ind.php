@@ -17,6 +17,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 <meta http-equiv="Content-Style-Type" content="text/css">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- Style -->
 <link rel="stylesheet" type="text/css" media="all" href="stylesheet.css">
 <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css?family=Oswald" rel="stylesheet"> 
@@ -29,14 +31,20 @@
 <!-- Goolag charts -->
 <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-<!--?php include("dialtodayhits.php") ?-->
-<?php include("dialtodaybannedhits.php") ?>
-<?php include("dialtodayallowedhits.php") ?>
-<?php include("dialtodaycountryhits.php") ?>
-<?php include("charthitsperday.php") ?>
-<?php include("chartcountriesperday.php") ?>
-<?php include("charthitsperhour.php") ?>
-<?php include("chartcountriesperhour.php") ?>
+<?php 
+	if (preg_match('/index\.php$/', $_SERVER['PHP_SELF'])) {
+		include("charthitsperday.php");
+		include("charthitsperhour.php");
+		if (!$useGeoIP) {include("dialtodayhits.php");}
+		if ($useGeoIP) {
+			include("dialtodaybannedhits.php");
+			include("dialtodayallowedhits.php");
+			include("dialtodaycountryhits.php");
+			include("chartcountriesperday.php");
+			include("chartcountriesperhour.php");
+		}
+	}
+?>
 
 </head>
 <body>

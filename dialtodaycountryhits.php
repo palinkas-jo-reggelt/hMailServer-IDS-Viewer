@@ -13,7 +13,7 @@
 	//Get guage max
 	$sql = $pdo->prepare("
 		SELECT	
-			ROUND(((COUNT(DISTINCT(country))) * 1.2), -1) AS dailymax,
+			ROUND(((COUNT(DISTINCT(".$countryColumnName."))) * 1.2), -1) AS dailymax,
 			DATE(timestamp) AS daily
 		FROM ".$Database['tablename']." 
 		GROUP BY daily
@@ -32,7 +32,7 @@
 	//Get current (today's) bans
 	$sql = $pdo->prepare("
 		SELECT	
-			COUNT(DISTINCT(country)) AS hits
+			COUNT(DISTINCT(".$countryColumnName.")) AS hits
 		FROM (
 			SELECT * 
 			FROM ".$Database['tablename']." 

@@ -26,7 +26,7 @@
 		$search_page = "";
 	}
 	if (isset($_GET['clear'])) {
-		header("Location: country.php");
+		header("Location: viewcountry.php");
 	}
 	
 	if (isset($_GET['sort1'])) {
@@ -86,7 +86,7 @@
 	$offset = ($page-1) * $no_of_records_per_page;
 	
 	$total_pages_sql = $pdo->prepare("
-		SELECT COUNT(DISTINCT(TRIM(BOTH '\"' FROM country))) AS count 
+		SELECT COUNT(DISTINCT(TRIM(BOTH '\"' FROM ".$countryColumnName."))) AS count 
 		FROM ".$Database['tablename']." 
 		".$search_SQL."
 	");
@@ -96,7 +96,7 @@
 
 	$sql = $pdo->prepare("
 		SELECT 
-			TRIM(BOTH '\"' FROM country) AS trimcountry, 
+			TRIM(BOTH '\"' FROM ".$countryColumnName.") AS trimcountry, 
 			SUM(hits) AS sumhits, 
 			MAX(timestamp) AS maxts 
 		FROM ".$Database['tablename']." 
