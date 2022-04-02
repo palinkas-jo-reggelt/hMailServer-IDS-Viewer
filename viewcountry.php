@@ -140,7 +140,7 @@
 			echo "
 			<div class='div-table-row'>
 				<div class='div-table-col mobile-bold' data-column='Country'>".$row['trimcountry']."</div>
-				<div class='div-table-col center' data-column='Hits'>".$row['sumhits']."</div>
+				<div class='div-table-col center' data-column='Hits'>".number_format($row['sumhits'])."</div>
 				<div class='div-table-col center' data-column='Last'>".date("y/m/d H:i:s", strtotime($row['maxts']))."</div>
 			</div>";
 		}
